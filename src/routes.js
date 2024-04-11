@@ -1,11 +1,12 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import {createBrowserRouter, Route, Routes} from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 
-const routes = (
-    <Routes>
-        <Route path="/" element={<Dashboard />} />
-    </Routes>
-);
+const routes = createBrowserRouter([
+    {
+        path: "/",
+        element: <Dashboard />
+    }
+])
 
 export default routes;

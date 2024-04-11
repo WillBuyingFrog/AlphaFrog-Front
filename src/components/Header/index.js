@@ -1,11 +1,15 @@
-
+import {Box, Center, Flex, Text} from "@chakra-ui/react";
 
 
 function Header(){
     return (
-        <div>
-            <h1>Header</h1>
-        </div>
+        <Box h={'80px'}>
+            <Flex h={'100%'}>
+                <Center w={'25%'} h={'100%'}>
+                    <Text fontSize={'3xl'} fontWeight={'600'}>AlphaFrog</Text>
+                </Center>
+            </Flex>
+        </Box>
     )
 }
 

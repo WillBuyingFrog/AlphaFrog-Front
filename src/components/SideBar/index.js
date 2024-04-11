@@ -1,15 +1,17 @@
 import {Box, List, ListItem} from "@chakra-ui/react";
+import SideBarItem from "./SideBarItem";
 
 
 function SideBar() {
     return (
-        <Box bg="gray.300" p={4}>
+        <Box p={4} minw={'180px'} w={'20%'}>
             <List>
                 <ListItem>
-                    <a href="#">个股</a>
+                    <SideBarItem text={'个股'}/>
                 </ListItem>
-                {/* 添加其他列表项 */}
             </List>
         </Box>
     );
 }
+
+export default SideBar;
