@@ -119,14 +119,10 @@ function DomesticIndexList() {
                                 icon={<ChevronRightIcon w={5} h={5} />} name={'爬取新指数'}
                                 link={'/panel/v1'} newTab={true}
                             />
-
                         </PopoverBody>
-
                     </PopoverContent>
                 </Popover>
             </Box>
-
-
         </Box>
     )
 }
