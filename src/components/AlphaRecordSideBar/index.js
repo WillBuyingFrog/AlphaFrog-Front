@@ -11,7 +11,7 @@ function SideBar() {
                 align={'stretch'}
             >
                 <RouterLink to={'/record/create-record'}>
-                    <SideBarItem text={'创建新的投资记录'}  />
+                    <SideBarItem text={'创建一般投资记录'}  />
                 </RouterLink>
 
                 <SideBarItem text={'创建初始投资记录'} />

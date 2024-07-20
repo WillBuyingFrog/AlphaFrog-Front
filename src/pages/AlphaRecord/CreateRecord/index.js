@@ -87,9 +87,35 @@ function CreateRecord(){
         }, 2500);
     }
 
+    // 提交储存编辑记录的函数
+
+    const handleSubmitRecords = async () => {
+        try {
+            await axios.post('/alpharecord/transactions/create/normal', analyzedRecords, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            toast({
+                title: "记录已上传",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch (error) {
+            console.error("There was an error submitting the records!", error);
+            toast({
+                title: "上传失败",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+    };
+
 
     // 页面内编辑交易记录相关state和函数
-    const [editingRecord, setEditingRecord] = useState(null);
+    const [editingRecord, setEditingRecord] = useState([]);
     const {isOpen: isEditRecordModalOpen, onOpen: onEditRecordModelOpen, onClose: onEditRecordModalClose} = useDisclosure();
     const toast = useToast();
 
@@ -100,8 +126,10 @@ function CreateRecord(){
 
     const handleSaveRecord = () => {
         const updatedRecords = analyzedRecords.map(record => {
-                if (record !== editingRecord) {
-                    return { ...editingRecord };
+                console.log(record.index);
+                console.log(editingRecord.index)
+                if (record.index === editingRecord.index) {
+                    return editingRecord;
                 }else{
                     return record;
                 }
@@ -137,6 +165,7 @@ function CreateRecord(){
                             <Tr>
                                 <Th>No.</Th>
                                 <Th>基金代码及名称</Th>
+                                <Th>购买平台</Th>
                                 <Th>交易类型</Th>
                                 <Th>交易时间</Th>
                                 <Th>交易金额、份额与净值</Th>
@@ -159,6 +188,7 @@ function CreateRecord(){
                                             </Box>
                                         </VStack>
                                     </Td>
+                                    <Td>{record.platform === "none" ? "待补充" : record.platform}</Td>
                                     <Td>{record.type}</Td>
                                     <Td>{record.time}</Td>
                                     <Td>
@@ -183,6 +213,13 @@ function CreateRecord(){
                         </Tbody>
                     </Table>
                 </Box>
+                {
+                    analyzedRecords.length > 0 && (
+                        <Box mt={'20px'}>
+                            <Button width={'100px'} onClick={handleSubmitRecords}>上传</Button>
+                        </Box>
+                    )
+                }
             </VStack>
 
             <Modal isOpen={isEditRecordModalOpen} onClose={onEditRecordModalClose}>
