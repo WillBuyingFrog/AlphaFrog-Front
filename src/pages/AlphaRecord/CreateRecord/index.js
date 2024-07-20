@@ -4,7 +4,7 @@ import {
     Flex,
     FormControl,
     FormLabel,
-    Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
+    Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select,
     Stack,
     Table,
     Tbody, Td,
@@ -119,7 +119,7 @@ function CreateRecord(){
 
     return (
         <Flex>
-            <VStack width={'900px'}>
+            <VStack width={'1100px'}>
                 <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" p="6">
                     <FormControl>
                         <FormLabel>Select images to upload</FormLabel>
@@ -131,15 +131,16 @@ function CreateRecord(){
                         </Button>
                     </Stack>
                 </Box>
-                <Box w={'900px'} marginTop={'20px'}>
+                <Box w={'1100px'} marginTop={'20px'}>
                     <Table>
                         <Thead>
                             <Tr>
                                 <Th>No.</Th>
                                 <Th>基金代码及名称</Th>
+                                <Th>交易类型</Th>
                                 <Th>交易时间</Th>
-                                <Th>交易金额</Th>
-                                <Th>交易份额</Th>
+                                <Th>交易金额、份额与净值</Th>
+                                <Th>手续费</Th>
                                 <Th>操作</Th>
                             </Tr>
                         </Thead>
@@ -158,9 +159,20 @@ function CreateRecord(){
                                             </Box>
                                         </VStack>
                                     </Td>
+                                    <Td>{record.type}</Td>
                                     <Td>{record.time}</Td>
-                                    <Td>{record.amount}</Td>
-                                    <Td>{record.invest_shares}</Td>
+                                    <Td>
+                                        <VStack alignItems="flex-start">
+                                            <Box>
+                                                <span>{record.amount}</span>
+                                                <br />
+                                            </Box>
+                                            <Box>
+                                                <span>{record.shares},{record.nav}</span>
+                                            </Box>
+                                        </VStack>
+                                    </Td>
+                                    <Td>{record.fee}</Td>
                                     <Td>
                                         <Button size="sm" colorScheme="blue" onClick={() => handleEditRecord(record)}>
                                             编辑
@@ -184,8 +196,12 @@ function CreateRecord(){
                             <Input value={editingRecord?.ts_code || ''} onChange={(e) => setEditingRecord({ ...editingRecord, ts_code: e.target.value })} />
                         </FormControl>
                         <FormControl mt={4}>
-                            <FormLabel>基金名称</FormLabel>
+                            <FormLabel>数据源中基金名称</FormLabel>
                             <Input value={editingRecord?.fund_database_name || ''} onChange={(e) => setEditingRecord({ ...editingRecord, fund_database_name: e.target.value })} />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>交易平台</FormLabel>
+                            <Input value={editingRecord?.platform || ''} onChange={(e) => setEditingRecord({ ...editingRecord, platform: e.target.value })} />
                         </FormControl>
                         <FormControl mt={4}>
                             <FormLabel>交易时间</FormLabel>
@@ -197,7 +213,24 @@ function CreateRecord(){
                         </FormControl>
                         <FormControl mt={4}>
                             <FormLabel>交易份额</FormLabel>
-                            <Input value={editingRecord?.invest_shares || ''} onChange={(e) => setEditingRecord({ ...editingRecord, invest_shares: e.target.value })} />
+                            <Input value={editingRecord?.shares || ''} onChange={(e) => setEditingRecord({ ...editingRecord, shares: e.target.value })} />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>份额净值</FormLabel>
+                            <Input value={editingRecord?.nav || ''} onChange={(e) => setEditingRecord({ ...editingRecord, nav: e.target.value })} />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>交易费用</FormLabel>
+                            <Input value={editingRecord?.fee || ''} onChange={(e) => setEditingRecord({ ...editingRecord, fee: e.target.value })} />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>交易类型</FormLabel>
+                            <Select defaultValue={editingRecord?.type || 'none'}>
+                                <option value={'buy'}>买入</option>
+                                <option value={'sell'}>卖出</option>
+                                <option value={'auto_invest'}>定投</option>
+                                <option value={'dividend'}>分红</option>
+                            </Select>
                         </FormControl>
                     </ModalBody>
                     <ModalFooter>
