@@ -1,9 +1,9 @@
 import {
     Box,
-    Button,
+    Button, Center,
     Flex,
     FormControl,
-    FormLabel,
+    FormLabel, Grid, GridItem, HStack,
     Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select,
     Stack,
     Table,
@@ -119,6 +119,7 @@ function CreateRecord(){
     const {isOpen: isEditRecordModalOpen, onOpen: onEditRecordModelOpen, onClose: onEditRecordModalClose} = useDisclosure();
     const toast = useToast();
 
+
     const handleEditRecord = (record) => {
         setEditingRecord({ ...record });
         onEditRecordModelOpen();
@@ -139,6 +140,26 @@ function CreateRecord(){
         onEditRecordModalClose();
         toast({
             title: "记录已更新",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
+    };
+
+    // 批量设置购买基金平台的相关state和函数
+
+    const [platformToSet, setPlatformToSet] = useState("");
+    const { isOpen: isSetPlatformModalOpen, onOpen: onSetPlatformModalOpen, onClose: onSetPlatformModalClose } = useDisclosure();
+
+    const handleSetPlatform = () => {
+        const updatedRecords = analyzedRecords.map(record => ({
+            ...record,
+            platform: platformToSet
+        }));
+        setAnalyzedRecords(updatedRecords);
+        onSetPlatformModalClose();
+        toast({
+            title: "平台已设置",
             status: "success",
             duration: 3000,
             isClosable: true,
@@ -188,17 +209,17 @@ function CreateRecord(){
                                             </Box>
                                         </VStack>
                                     </Td>
-                                    <Td>{record.platform === "none" ? "待补充" : record.platform}</Td>
+                                    <Td>{record.platform === "" ? "待补充" : record.platform}</Td>
                                     <Td>{record.type}</Td>
                                     <Td>{record.time}</Td>
                                     <Td>
                                         <VStack alignItems="flex-start">
                                             <Box>
-                                                <span>{record.amount}</span>
+                                                <span>{record.amount}元</span>
                                                 <br />
                                             </Box>
                                             <Box>
-                                                <span>{record.shares},{record.nav}</span>
+                                                <span>{record.shares}份,{record.nav}</span>
                                             </Box>
                                         </VStack>
                                     </Td>
@@ -215,9 +236,19 @@ function CreateRecord(){
                 </Box>
                 {
                     analyzedRecords.length > 0 && (
-                        <Box mt={'20px'}>
-                            <Button width={'100px'} onClick={handleSubmitRecords}>上传</Button>
-                        </Box>
+                        <Grid mt={'20px'} w={'600px'} templateColumns='repeat(3, 1fr)'>
+                            <GridItem>
+                                <Center>
+                                    <Button width={'130px'} onClick={onSetPlatformModalOpen}>一键设置平台</Button>
+                                </Center>
+                            </GridItem>
+                            <GridItem>
+                                <Center>
+                                    <Button width={'130px'} onClick={handleSubmitRecords}>上传记录</Button>
+                                </Center>
+                            </GridItem>
+
+                        </Grid>
                     )
                 }
             </VStack>
@@ -275,6 +306,27 @@ function CreateRecord(){
                             保存
                         </Button>
                         <Button variant="ghost" onClick={onEditRecordModalClose}>
+                            取消
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal isOpen={isSetPlatformModalOpen} onClose={onSetPlatformModalClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>设置购买平台</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <FormControl>
+                            <FormLabel>购买平台</FormLabel>
+                            <Input value={platformToSet} onChange={(e) => setPlatformToSet(e.target.value)} />
+                        </FormControl>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme="blue" mr={3} onClick={handleSetPlatform}>
+                            保存
+                        </Button>
+                        <Button variant="ghost" onClick={onSetPlatformModalClose}>
                             取消
                         </Button>
                     </ModalFooter>
